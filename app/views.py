@@ -15,6 +15,7 @@ from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
 from io import BytesIO
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 class CustomLoginView(LoginView):
     template_name = 'login.html'
     redirect_authenticated_user = True
@@ -69,13 +70,30 @@ class RegistroServicoListView(LoginRequiredMixin, ListView):
     model = RegistroServico
     template_name = 'registroservico/list.html'
     context_object_name = 'registros'
+    paginate_by = 10  # Número de registros por página
 
-    # o usuário que não for superuser, só verá os registros que ele mesmo criou
     def get_queryset(self):
-        if self.request.user.is_superuser:
-            return RegistroServico.objects.all()
-        else:
-            return RegistroServico.objects.filter(executado_por=self.request.user)
+        queryset = RegistroServico.objects.all()
+
+        # Se não for superuser, restringe aos próprios registros
+        if not self.request.user.is_superuser:
+            queryset = queryset.filter(executado_por=self.request.user)
+
+        # Busca por parâmetros GET
+        search = self.request.GET.get('q')
+        if search:
+            queryset = queryset.filter(
+                Q(servico__nome__icontains=search) |
+                Q(local_execucao__icontains=search) |
+                Q(data__icontains=search)
+            )
+
+        return queryset.order_by('-data', '-id')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_query'] = self.request.GET.get('q', '')
+        return context
 class RegistroServicoDetailView(LoginRequiredMixin, DetailView):
     model = RegistroServico
     template_name = 'registroservico/detail.html'

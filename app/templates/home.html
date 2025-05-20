@@ -25,11 +25,6 @@
                             <a href="{% url 'registroservico_create' %}" class="btn btn-sm btn-primary" title="Novo Registro de Serviço">
                                 <i class="fas fa-plus"></i> Novo
                             </a>
-                            {% if request.user.is_superuser %}
-                            <a href="{% url 'servico_create' %}" class="btn btn-sm btn-secondary" title="Novo Serviço">
-                                <i class="fas fa-wrench"></i> Serviço
-                            </a>
-                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -37,8 +32,8 @@
                     <table class="table table-striped mb-0">
                         <thead>
                             <tr>
-                                <th style="width: 10px">#</th>
-                                <th>Serviço</th>
+
+                                <th>Registro</th>
                                 <th>Local</th>
                                 <th>Data</th>
                             </tr>
@@ -46,7 +41,6 @@
                         <tbody>
                             {% for registro in ultimos_registros %}
                                 <tr>
-                                    <td>{{ registro.id }}</td>
                                     <td>{{ registro.servico.nome }}</td>
                                     <td>{{ registro.local_execucao }}</td>
                                     <td>{{ registro.data|date:"d/m/Y" }}</td>

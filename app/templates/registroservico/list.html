@@ -11,16 +11,23 @@
 
 {% block content %}
 <div class="card">
-    <div class="card-header">
-        <h3 class="card-title">Todos os Registros</h3>
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h3 class="card-title mb-0">Todos os Registros</h3>
         <div class="card-tools">
             <a href="{% url 'registroservico_create' %}" class="btn btn-primary">
                 <i class="fas fa-plus"></i> Novo Registro
             </a>
         </div>
     </div>
+
     <div class="card-body">
-        <table id="registrosTable" class="table table-bordered table-striped">
+        <!-- Formulário de busca -->
+        <form method="get" class="mb-3 d-flex">
+            <input type="text" name="q" value="{{ search_query }}" class="form-control mr-2" placeholder="Buscar por serviço, local ou data">
+            <button type="submit" class="btn btn-outline-primary">Buscar</button>
+        </form>
+
+        <table class="table table-bordered table-striped">
             <thead>
                 <tr>
                     <th>Serviço</th>
@@ -53,7 +60,7 @@
                         <a href="{% url 'registroservico_detail' registro.pk  %}" class="btn btn-info btn-sm">
                             <i class="fas fa-eye"></i> Visualizar
                         </a>
-                        {% if request.user.is_superuser%}
+                        {% if request.user.is_superuser %}
                             <a href="{% url 'registroservico_delete' registro.pk %}" class="btn btn-danger btn-sm">
                                 <i class="fas fa-trash"></i> Excluir
                             </a>
@@ -67,30 +74,51 @@
                 {% endfor %}
             </tbody>
         </table>
+
+        <!-- Paginação -->
+        {% if registros.has_other_pages %}
+        <div class="mt-3 d-flex justify-content-between align-items-center">
+            <div>
+                Exibindo {{ registros.start_index }} a {{ registros.end_index }} de {{ registros.paginator.count }} registros
+            </div>
+            <nav>
+                <ul class="pagination mb-0">
+                    {% if registros.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?q={{ search_query }}&page={{ registros.previous_page_number }}">Anterior</a>
+                        </li>
+                    {% endif %}
+
+                    {% for page_num in registros.paginator.page_range %}
+                        {% if registros.number == page_num %}
+                            <li class="page-item active"><span class="page-link">{{ page_num }}</span></li>
+                        {% elif page_num > registros.number|add:-3 and page_num < registros.number|add:3 %}
+                            <li class="page-item"><a class="page-link" href="?q={{ search_query }}&page={{ page_num }}">{{ page_num }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if registros.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?q={{ search_query }}&page={{ registros.next_page_number }}">Próxima</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
-<!-- DataTables -->
-<script src="{% static 'adminlte/plugins/datatables/jquery.dataTables.min.js' %}"></script>
-<script src="{% static 'adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<!-- Lightbox -->
+<script src="https://cdn.jsdelivr.net/npm/ekko-lightbox@5.3.0/dist/ekko-lightbox.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ekko-lightbox@5.3.0/dist/ekko-lightbox.css" />
 
 <script>
-$(function () {
-    $('#registrosTable').DataTable({
-        "paging": true,
-        "lengthChange": true,
-        "searching": true,
-        "ordering": true,
-        "order": [[2, 'desc']], // ordena pela data
-        "info": true,
-        "autoWidth": false,
-        "responsive": true,
-        "language": {
-            "url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Portuguese-Brasil.json"
-        }
-    });
+$(document).on('click', '[data-toggle="lightbox"]', function (event) {
+    event.preventDefault();
+    $(this).ekkoLightbox();
 });
 </script>
 {% endblock %}
