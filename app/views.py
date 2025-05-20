@@ -39,6 +39,8 @@ def index(request):
 class ServicoListView(LoginRequiredMixin,SomenteSupervisorMixin, ListView):
     model = Servico
     template_name = 'servico/list.html'
+    
+    
 
 class ServicoDetailView(LoginRequiredMixin,SomenteSupervisorMixin, DetailView):
     model = Servico
@@ -68,6 +70,12 @@ class RegistroServicoListView(LoginRequiredMixin, ListView):
     template_name = 'registroservico/list.html'
     context_object_name = 'registros'
 
+    # o usuário que não for superuser, só verá os registros que ele mesmo criou
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return RegistroServico.objects.all()
+        else:
+            return RegistroServico.objects.filter(executado_por=self.request.user)
 class RegistroServicoDetailView(LoginRequiredMixin, DetailView):
     model = RegistroServico
     template_name = 'registroservico/detail.html'
