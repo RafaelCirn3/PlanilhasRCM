@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import (
-    index, home, 
+    home, 
     # SERVIÇO
     ServicoListView, ServicoDetailView, ServicoCreateView,
     ServicoUpdateView, ServicoDeleteView,

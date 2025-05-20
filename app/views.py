@@ -1,5 +1,8 @@
 from django.urls import reverse_lazy
+from django.http import HttpResponse
 from django.shortcuts import render
+from datetime import date
+import pandas as pd
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Servico, RegistroServico
@@ -7,13 +10,9 @@ from .forms import (
     ServicoForm,
     RegistroServicoForm,
 )
-from datetime import date
-import pandas as pd
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
-from openpyxl import load_workbook
 from io import BytesIO
-from django.http import HttpResponse
 
 
 def home(request):
