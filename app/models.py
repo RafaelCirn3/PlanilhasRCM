@@ -21,23 +21,6 @@ class RegistroServico(models.Model):
 
     def percentual_realizado(self):
         return (self.realizado_periodo / self.servico.escopo_minimo) * 100
-
-class Insumo(models.Model):
-    nome = models.CharField(max_length=255)
-    descricao = models.TextField(blank=True, null=True)
-    quantidade_total = models.FloatField()
-
-    def __str__(self):
-        return self.nome
-
-class MovimentacaoInsumo(models.Model):
-    insumo = models.ForeignKey(Insumo, on_delete=models.CASCADE)
-    quantidade = models.FloatField()
-    finalidade = models.CharField(max_length=255)
-    data = models.DateTimeField(auto_now_add=True)
-    solicitado_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    registro_servico = models.ForeignKey(RegistroServico, on_delete=models.CASCADE)
-
 class HistoricoUsuario(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     acao = models.CharField(max_length=255)
