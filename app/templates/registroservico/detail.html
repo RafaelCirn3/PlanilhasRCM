@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Detalhes do Registro - {{ object.servico.nome }}{% endblock %}
+{% block page_title %}Detalhes do Registro{% endblock %}
+
+{% block breadcrumb %}
+{{ block.super }}
+<li class="breadcrumb-item active">Detalhes</li>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Informações do Serviço Executado</h3>
+        <div class="card-tools">
+            <a href="{% url 'registroservico_update' object.pk %}" class="btn btn-warning">
+                <i class="fas fa-edit"></i> Editar
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-4">Serviço:</dt>
+                    <dd class="col-sm-8">{{ object.servico.nome }}</dd>
+
+                    <dt class="col-sm-4">Data:</dt>
+                    <dd class="col-sm-8">{{ object.data|date:"d/m/Y" }}</dd>
+
+                    <dt class="col-sm-4">Local:</dt>
+                    <dd class="col-sm-8">{{ object.local_execucao }}</dd>
+
+                    <dt class="col-sm-4">Executado por:</dt>
+                    <dd class="col-sm-8">{{ object.executado_por.get_full_name|default:object.executado_por.username }}</dd>
+
+                    <dt class="col-sm-4">Quantidade:</dt>
+                    <dd class="col-sm-8">
+                        {{ object.realizado_periodo }} {{ object.servico.unidade_medida }}
+                        <div class="progress progress-xs mt-2">
+                            <div class="progress-bar bg-primary" style="width: {{ object.percentual_realizado }}%"></div>
+                        </div>
+                        <small>{{ object.percentual_realizado|floatformat:2 }}% do escopo mínimo</small>
+                    </dd>
+                </dl>
+            </div>
+            <div class="col-md-6">
+                {% if object.fotos %}
+                <div class="text-center mb-3">
+                    <a href="{{ object.fotos.url }}" data-toggle="lightbox" data-title="Foto do Serviço">
+                        <img src="{{ object.fotos.url }}" class="img-fluid img-thumbnail" style="max-height: 200px;">
+                    </a>
+                    <p class="text-muted mt-2">Clique na imagem para ampliar</p>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> Nenhuma foto registrada para este serviço
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <h4>Descrição do Serviço</h4>
+                <div class="callout callout-info">
+                    {{ object.descricao|linebreaks }}
+                </div>
+            </div>
+        </div>
+
+        {% if object.observacoes %}
+        <div class="row">
+            <div class="col-md-12">
+                <h4>Observações</h4>
+                <div class="callout callout-warning">
+                    {{ object.observacoes|linebreaks }}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    <div class="card-footer">
+        <a href="{% url 'registroservico_list' %}" class="btn btn-default">
+            <i class="fas fa-arrow-left"></i> Voltar
+        </a>
+        <a href="{% url 'registroservico_delete' object.pk %}" class="btn btn-danger float-right">
+            <i class="fas fa-trash"></i> Excluir
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<!-- Ekko Lightbox -->
+<link rel="stylesheet" href="{% static 'adminlte/plugins/ekko-lightbox/ekko-lightbox.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+<!-- Ekko Lightbox -->
+<script src="{% static 'adminlte/plugins/ekko-lightbox/ekko-lightbox.min.js' %}"></script>
+
+<script>
+$(function () {
+    $(document).on('click', '[data-toggle="lightbox"]', function(event) {
+        event.preventDefault();
+        $(this).ekkoLightbox({
+            alwaysShowClose: true
+        });
+    });
+});
+</script>
+{% endblock %}

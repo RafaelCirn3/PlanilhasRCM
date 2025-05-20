@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Excluir Registro de Serviço{% endblock %}
+{% block page_title %}Excluir Registro de Serviço{% endblock %}
+
+{% block breadcrumb %}
+{{ block.super }}
+<li class="breadcrumb-item active">Excluir</li>
+{% endblock %}
+
+{% block content %}
+<div class="card card-danger">
+    <div class="card-header">
+        <h3 class="card-title">Confirmação de Exclusão</h3>
+    </div>
+    <form method="post">
+        {% csrf_token %}
+        <div class="card-body">
+            <div class="alert alert-danger">
+                <h5><i class="icon fas fa-exclamation-triangle"></i> Atenção!</h5>
+                Você está prestes a excluir permanentemente o registro do serviço:
+                <strong>"{{ object.servico.nome }}"</strong> executado em <strong>{{ object.local_execucao }}</strong> no dia <strong>{{ object.data|date:"d/m/Y" }}</strong>.
+            </div>
+            <p>Esta ação não pode ser desfeita e todos os dados relacionados serão perdidos.</p>
+            <p>Tem certeza que deseja continuar?</p>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-danger">
+                <i class="fas fa-trash"></i> Confirmar Exclusão
+            </button>
+            <a href="{% url 'registroservico_detail' object.pk %}" class="btn btn-default float-right">
+                <i class="fas fa-times"></i> Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

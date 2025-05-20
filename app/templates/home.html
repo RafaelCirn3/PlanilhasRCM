@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Painel de Controle - Serviços & Insumos{% endblock %}
+
+{% block page_title %}Painel de Controle{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item active">Dashboard</li>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- COLUNA ESQUERDA: Últimos Serviços Registrados -->
+        <section class="col-lg-7 connectedSortable">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center w-100">
+                        <h3 class="card-title mb-0">Últimos Serviços Registrados</h3>
+                        <div>
+                            <a href="{% url 'excel_registros' %}" class="btn btn-sm btn-success mr-2" title="Exportar para Excel">
+                                <i class="fas fa-file-excel"></i> Excel
+                            </a>
+                            <a href="{% url 'registroservico_create' %}" class="btn btn-sm btn-primary" title="Novo Registro de Serviço">
+                                <i class="fas fa-plus"></i> Novo
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-striped mb-0">
+                        <thead>
+                            <tr>
+                                <th style="width: 10px">#</th>
+                                <th>Serviço</th>
+                                <th>Local</th>
+                                <th>Data</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for registro in ultimos_registros %}
+                                <tr>
+                                    <td>{{ registro.id }}</td>
+                                    <td>{{ registro.servico.nome }}</td>
+                                    <td>{{ registro.local_execucao }}</td>
+                                    <td>{{ registro.data|date:"d/m/Y" }}</td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center">Nenhum registro encontrado</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer clearfix">
+                    <a href="{% url 'registroservico_list' %}" class="btn btn-sm btn-secondary float-right">
+                        Ver Todos
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- COLUNA DIREITA: Últimas Movimentações de Insumos -->
+        <section class="col-lg-5 connectedSortable">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center w-100">
+                        <h3 class="card-title mb-0">Últimas Movimentações de Insumos</h3>
+                        <a href="{% url 'excel_movimentacoes' %}" class="btn btn-sm btn-success" title="Exportar para Excel">
+                            <i class="fas fa-file-excel"></i> Excel
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-bordered mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Insumo</th>
+                                    <th>Quantidade</th>
+                                    <th>Data</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for mov in ultimas_movimentacoes %}
+                                    <tr>
+                                        <td>{{ mov.insumo.nome }}</td>
+                                        <td>{{ mov.quantidade }}</td>
+                                        <td>{{ mov.data|date:"d/m/Y H:i" }}</td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="3" class="text-center">Nenhuma movimentação recente</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function () {
+        // Atualiza o dashboard a cada 5 minutos (300000 ms)
+        setTimeout(function () {
+            window.location.reload();
+        }, 300000);
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Serviços{% endblock %}
+{% block page_title %}Lista de Serviços{% endblock %}
+
+{% block breadcrumb %}
+{{ block.super }}
+<li class="breadcrumb-item active">Lista</li>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Serviços Cadastrados</h3>
+        <div class="card-tools">
+            <a href="{% url 'servico_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Novo Serviço
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Unidade de Medida</th>
+                    <th>Escopo Mínimo</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for servico in object_list %}
+                <tr>
+                    <td>{{ servico.nome }}</td>
+                    <td>{{ servico.unidade_medida }}</td>
+                    <td>{{ servico.escopo_minimo }}</td>
+                    <td>
+                        <a href="{% url 'servico_detail' servico.pk %}" class="btn btn-info btn-sm">
+                            <i class="fas fa-eye"></i> Visualizar
+                        </a>
+                        <a href="{% url 'servico_delete' servico.pk %}" class="btn btn-sm btn-danger">
+                            <i class="fas fa-trash"></i> Excluir
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4">Nenhum serviço cadastrado</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

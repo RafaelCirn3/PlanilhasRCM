@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Insumos{% endblock %}
+{% block page_title %}Insumos{% endblock %}
+
+{% block breadcrumb %}
+{{ block.super }}
+<li class="breadcrumb-item active">Lista</li>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Todos os Insumos</h3>
+        <div class="card-tools">
+            <a href="{% url 'insumo_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Novo Insumo
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <table id="insumosTable" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Descrição</th>
+                    <th>Quantidade Total</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for insumo in object_list %}
+                <tr>
+                    <td>{{ insumo.id }}</td>
+                    <td>{{ insumo.nome }}</td>
+                    <td>{{ insumo.descricao|truncatechars:60 }}</td>
+                    <td>{{ insumo.quantidade_total }}</td>
+                    <td>
+                        <a href="{% url 'insumo_detail' insumo.pk %}" class="btn btn-info btn-sm" title="Editar">
+                            <i class="fas fa-eye"></i> Visualizar
+                        </a>
+                        <a href="{% url 'insumo_delete' insumo.pk %}" class="btn btn-sm btn-danger" title="Excluir" onclick="return confirm('Tem certeza que deseja excluir este insumo?');">
+                            <i class="fas fa-trash"></i> Excluir
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">Nenhum insumo cadastrado</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- DataTables -->
+<script src="{% static 'adminlte/plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+
+<script>
+$(function () {
+    $('#insumosTable').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "order": [[1, 'asc']],
+        "info": true,
+        "autoWidth": false,
+        "responsive": true,
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Portuguese-Brasil.json"
+        }
+    });
+});
+</script>
+{% endblock %}

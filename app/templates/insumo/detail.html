@@ -1,0 +1,72 @@
+{% extends 'base.html'%}
+{% load static %}
+
+{% block title%} Detalhes do Insumo - {{ object.nome }}{% endblock%}
+{% block page_title%} Detalhes do Insumo{% endblock%}
+
+{% block breadcrumb %}
+{{ block.super }}
+<li class="breadcrumb-item active">Detalhes</li>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Informações do Insumo</h3>
+        <div class="card-tools">
+            <a href="{% url 'insumo_update' object.pk %}" class="btn btn-warning">
+                <i class="fas fa-edit"></i> Editar
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-4">Nome:</dt>
+                    <dd class="col-sm-8">{{ object.nome }}</dd>
+
+                    <dt class="col-sm-4">Descrição:</dt>
+                    <dd class="col-sm-8">{{ object.descricao }}</dd>
+
+                    <dt class="col-sm-4">Quantidade Total:</dt>
+                    <dd class="col-sm-8">{{ object.quantidade_total }}</dd>
+                </dl>
+            </div>
+            <div class="col-md-6">
+                {% if object.fotos %}
+                <div class="text-center mb-3">
+                    <a href="{{ object.fotos.url }}" data-toggle="lightbox" data-title="Foto do Insumo">
+                        <img src="{{ object.fotos.url }}" class="img-fluid img-thumbnail" style="max-height: 200px;">
+                    </a>
+                    <p class="text-muted" mt-2> Clique na imagem para ampliar</p>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> Nenhuma foto registrada para este insumo
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <a href="{% url 'insumo_list' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Voltar
+        </a>
+        <a href="{% url 'insumo_delete' object.pk %}" class="btn btn-danger" onclick="return confirm('Tem certeza que deseja excluir este insumo?');">
+            <i class="fas fa-trash"></i> Excluir
+        </a>
+    </div>
+    
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'plugins/lightbox2/js/lightbox.min.js' %}"></script>
+<script>
+    $(document).ready(function() {
+        // Inicializa o lightbox
+        lightbox.init();
+    });
+</script>
+{% endblock %}

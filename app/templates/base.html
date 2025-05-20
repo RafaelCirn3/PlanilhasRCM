@@ -1,0 +1,90 @@
+{% load static %}
+{% load widget_tweaks %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Sistema de Serviços{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- AdminLTE CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/icheck-bootstrap@3.0.1/icheck-bootstrap.min.css">
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+    <!-- Navbar (Header) -->
+    <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+        <!-- Left navbar links -->
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a href="{% url 'servico_list' %}" class="nav-link">Serviços</a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'registroservico_list' %}" class="nav-link">Registros</a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'insumo_list' %}" class="nav-link">Insumos</a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'movimentacaoinsumo_list' %}" class="nav-link">Movimentações</a>
+            </li>
+        </ul>
+
+        <!-- Right navbar links -->
+        <ul class="navbar-nav ml-auto">
+            {% if user.is_authenticated %}
+            <!-- User Dropdown Menu -->
+            <li class="nav-item dropdown">
+                <a class="nav-link" data-bs-toggle="dropdown" href="#" aria-expanded="false">
+                    <i class="fas fa-user-circle"></i> {{ user.get_full_name|default:user.username }}
+                </a>
+
+            </li>
+            {% else %}
+            <!-- Login link for anonymous users -->
+            <li class="nav-item">
+                <a href="{% url 'admin:login' %}" class="nav-link">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <!-- Sidebar -->
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+        <a href="{% url 'home' %}" class="brand-link">
+            <span class="brand-text font-weight-light">Serviços & Insumos</span>
+        </a>
+        <div class="sidebar">
+            <nav class="mt-2">
+                <ul class="nav nav-pills nav-sidebar flex-column">
+                    <li class="nav-item"><a href="{% url 'servico_list' %}" class="nav-link">Serviços</a></li>
+                    <li class="nav-item"><a href="{% url 'registroservico_list' %}" class="nav-link">Registros</a></li>
+                    <li class="nav-item"><a href="{% url 'insumo_list' %}" class="nav-link">Insumos</a></li>
+                    <li class="nav-item"><a href="{% url 'movimentacaoinsumo_list' %}" class="nav-link">Movimentações</a></li>
+                </ul>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- Content Wrapper -->
+    <div class="content-wrapper p-4">
+        {% block content %}{% endblock %}
+    </div>
+
+</div>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

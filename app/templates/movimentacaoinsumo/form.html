@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}{% if object %}Editar{% else %}Nova{% endif %} Movimentação{% endblock %}
+{% block page_title %}{% if object %}Editar{% else %}Nova{% endif %} Movimentação{% endblock %}
+
+{% block breadcrumb %}
+{{ block.super }}
+<li class="breadcrumb-item active">{% if object %}Editar{% else %}Nova{% endif %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">Dados da Movimentação</h3>
+    </div>
+    <form method="post">
+        <div class="card-body">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.insumo.id_for_label }}">{{ form.insumo.label }}</label>
+                {{ form.insumo|add_class:"form-control" }}
+                {% if form.insumo.errors %}
+                <div class="invalid-feedback" style="display: block;">
+                    {{ form.insumo.errors }}
+                </div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.quantidade.id_for_label }}">{{ form.quantidade.label }}</label>
+                {{ form.quantidade|add_class:"form-control" }}
+                {% if form.quantidade.errors %}
+                <div class="invalid-feedback" style="display: block;">
+                    {{ form.quantidade.errors }}
+                </div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.finalidade.id_for_label }}">{{ form.finalidade.label }}</label>
+                {{ form.finalidade|add_class:"form-control" }}
+                {% if form.finalidade.errors %}
+                <div class="invalid-feedback" style="display: block;">
+                    {{ form.finalidade.errors }}
+                </div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.registro_servico.id_for_label }}">{{ form.registro_servico.label }}</label>
+                {{ form.registro_servico|add_class:"form-control" }}
+                {% if form.registro_servico.errors %}
+                <div class="invalid-feedback" style="display: block;">
+                    {{ form.registro_servico.errors }}
+                </div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.solicitado_por.id_for_label }}">{{ form.solicitado_por.label }}</label>
+                {{ form.solicitado_por|add_class:"form-control" }}
+                {% if form.solicitado_por.errors %}
+                <div class="invalid-feedback" style="display: block;">
+                    {{ form.solicitado_por.errors }}
+                </div>
+                {% endif %}
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Salvar
+                </button>
+                <a href="{% url 'movimentacaoinsumo_list' %}" class="btn btn-default float-right">
+                    <i class="fas fa-times"></i> Cancelar
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

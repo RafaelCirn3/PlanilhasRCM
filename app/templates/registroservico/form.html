@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}{% if object %}Editar{% else %}Novo{% endif %} Registro de Serviço{% endblock %}
+{% block page_title %}{% if object %}Editar{% else %}Novo{% endif %} Registro de Serviço{% endblock %}
+
+{% block breadcrumb %}
+{{ block.super }}
+<li class="breadcrumb-item active">{% if object %}Editar{% else %}Novo{% endif %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title">Dados do Registro</h3>
+    </div>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="{{ form.servico.id_for_label }}">{{ form.servico.label }}</label>
+                        {% render_field form.servico class="form-control select2" %}
+                        {% if form.servico.errors %}
+                        <div class="invalid-feedback" style="display: block;">
+                            {{ form.servico.errors }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="{{ form.local_execucao.id_for_label }}">{{ form.local_execucao.label }}</label>
+                        {% render_field form.local_execucao class="form-control" %}
+                        {% if form.local_execucao.errors %}
+                        <div class="invalid-feedback" style="display: block;">
+                            {{ form.local_execucao.errors }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="{{ form.realizado_periodo.id_for_label }}">{{ form.realizado_periodo.label }}</label>
+                        <div class="input-group">
+                            {% render_field form.realizado_periodo class="form-control" %}
+                            <div class="input-group-append">
+                                <span class="input-group-text">{{ form.instance.servico.unidade_medida|default:"un" }}</span>
+                            </div>
+                        </div>
+                        {% if form.realizado_periodo.errors %}
+                        <div class="invalid-feedback" style="display: block;">
+                            {{ form.realizado_periodo.errors }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="{{ form.fotos.id_for_label }}">{{ form.fotos.label }}</label>
+                        <div class="custom-file">
+                            {% render_field form.fotos class="custom-file-input" %}
+                            <label class="custom-file-label" for="{{ form.fotos.id_for_label }}">Escolher arquivo...</label>
+                        </div>
+                        {% if form.fotos.errors %}
+                        <div class="invalid-feedback" style="display: block;">
+                            {{ form.fotos.errors }}
+                        </div>
+                        {% endif %}
+                        {% if form.instance.fotos %}
+                        <small class="form-text text-muted">
+                            Foto atual: <a href="{{ form.instance.fotos.url }}" target="_blank">{{ form.instance.fotos.name }}</a>
+                        </small>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.descricao.id_for_label }}">{{ form.descricao.label }}</label>
+                {% render_field form.descricao class="form-control" rows="3" %}
+                {% if form.descricao.errors %}
+                <div class="invalid-feedback" style="display: block;">
+                    {{ form.descricao.errors }}
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.observacoes.id_for_label }}">{{ form.observacoes.label }}</label>
+                {% render_field form.observacoes class="form-control" rows="3" %}
+                {% if form.observacoes.errors %}
+                <div class="invalid-feedback" style="display: block;">
+                    {{ form.observacoes.errors }}
+                </div>
+                {% endif %}
+                <small class="form-text text-muted">
+                    Informe dificuldades encontradas, motivos de atraso, falta de equipamentos, etc.
+                </small>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Salvar
+            </button>
+            <a href="{% url 'registroservico_list' %}" class="btn btn-default float-right">
+                <i class="fas fa-times"></i> Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<!-- CSS local -->
+<link rel="stylesheet" href="{% static 'adminlte/plugins/select2/css/select2.min.css' %}">
+<link rel="stylesheet" href="{% static 'adminlte/plugins/select2/css/select2-bootstrap4.min.css' %}">
+<link rel="stylesheet" href="{% static 'adminlte/plugins/ekko-lightbox/ekko-lightbox.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+<!-- jQuery (já deve estar no base.html) -->
+<script src="{% static 'adminlte/plugins/jquery/jquery.min.js' %}"></script>
+
+<!-- Plugins locais -->
+<script src="{% static 'adminlte/plugins/select2/js/select2.full.min.js' %}"></script>
+<script src="{% static 'adminlte/plugins/bs-custom-file-input/bs-custom-file-input.min.js' %}"></script>
+<script src="{% static 'adminlte/plugins/ekko-lightbox/ekko-lightbox.min.js' %}"></script>
+
+<script>
+$(document).ready(function() {
+    // Inicialização com tratamento de erros
+    try {
+        $('.select2').select2({
+            theme: 'bootstrap4',
+            width: '100%'
+        });
+    } catch (e) {
+        console.error("Erro ao carregar Select2:", e);
+    }
+
+    try {
+        if(typeof bsCustomFileInput !== 'undefined') {
+            bsCustomFileInput.init();
+        }
+    } catch (e) {
+        console.error("Erro ao carregar bsCustomFileInput:", e);
+    }
+    
+    // Mostrar nome do arquivo
+    $(".custom-file-input").on("change", function() {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+});
+</script>
+{% endblock %}

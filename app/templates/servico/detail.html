@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalhes do Serviço{% endblock %}
+{% block page_title %}Detalhes do Serviço{% endblock %}
+
+{% block breadcrumb %}
+{{ block.super }}
+<li class="breadcrumb-item active">Detalhes</li>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Informações do Serviço</h3>
+                <div class="card-tools">
+            <a href="{% url 'servico_update' object.pk %}" class="btn btn-warning">
+                <i class="fas fa-edit"></i> Editar
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Nome:</dt>
+            <dd class="col-sm-9">{{ object.nome }}</dd>
+
+            <dt class="col-sm-3">Unidade de Medida:</dt>
+            <dd class="col-sm-9">{{ object.unidade_medida }}</dd>
+
+            <dt class="col-sm-3">Escopo Mínimo:</dt>
+            <dd class="col-sm-9">{{ object.escopo_minimo }}</dd>
+        </dl>
+    </div>
+    <div class="card-footer">
+        <a href="{% url 'servico_list'  %}" class="btn btn-default">
+            <i class="fas fa-arrow-left"></i> voltar
+        </a>
+        <a href="{% url 'servico_delete' object.pk %}" class="btn btn-danger float-right">
+            <i class="fas fa-trash"></i> Excluir
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        // Initialize any JavaScript functionality here
+    });
+</script>
+{% endblock %}
