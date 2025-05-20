@@ -1,6 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+class PerfilUsuario(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    is_funcionario = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.user.username
 class Servico(models.Model):
     nome = models.CharField(max_length=255)
     unidade_medida = models.CharField(max_length=50)

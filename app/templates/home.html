@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Painel de Controle - Serviços & Insumos{% endblock %}
+{% block title %}Painel de Controle - Serviços{% endblock %}
 
 {% block page_title %}Painel de Controle{% endblock %}
 
@@ -18,13 +18,18 @@
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-items-center w-100">
                         <h3 class="card-title mb-0">Últimos Serviços Registrados</h3>
-                        <div>
+                        <div class="d-flex gap-2">
                             <a href="{% url 'excel_registros' %}" class="btn btn-sm btn-success mr-2" title="Exportar para Excel">
                                 <i class="fas fa-file-excel"></i> Excel
                             </a>
                             <a href="{% url 'registroservico_create' %}" class="btn btn-sm btn-primary" title="Novo Registro de Serviço">
                                 <i class="fas fa-plus"></i> Novo
                             </a>
+                            {% if request.user.is_superuser %}
+                            <a href="{% url 'servico_create' %}" class="btn btn-sm btn-secondary" title="Novo Serviço">
+                                <i class="fas fa-wrench"></i> Serviço
+                            </a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

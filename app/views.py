@@ -3,7 +3,8 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from datetime import date
 import pandas as pd
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.views import LoginView
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Servico, RegistroServico
 from .forms import (
@@ -13,8 +14,16 @@ from .forms import (
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
 from io import BytesIO
+from django.contrib.auth.decorators import login_required
+class CustomLoginView(LoginView):
+    template_name = 'login.html'
+    redirect_authenticated_user = True
+    next_page = reverse_lazy('home')
+class SomenteSupervisorMixin(UserPassesTestMixin):
+    def test_func(self):
+        return self.request.user.is_superuser
 
-
+@login_required
 def home(request):
     context = {
         'total_servicos': Servico.objects.count(),
@@ -27,27 +36,27 @@ def home(request):
 def index(request):
     return render(request, 'base.html')
 # ---------------------- SERVIÇO ----------------------
-class ServicoListView(LoginRequiredMixin, ListView):
+class ServicoListView(LoginRequiredMixin,SomenteSupervisorMixin, ListView):
     model = Servico
     template_name = 'servico/list.html'
 
-class ServicoDetailView(LoginRequiredMixin, DetailView):
+class ServicoDetailView(LoginRequiredMixin,SomenteSupervisorMixin, DetailView):
     model = Servico
     template_name = 'servico/detail.html'
 
-class ServicoCreateView(LoginRequiredMixin, CreateView):
+class ServicoCreateView(LoginRequiredMixin,SomenteSupervisorMixin, CreateView):
     model = Servico
     form_class = ServicoForm
     template_name = 'servico/form.html'
     success_url = reverse_lazy('servico_list')
 
-class ServicoUpdateView(LoginRequiredMixin, UpdateView):
+class ServicoUpdateView(LoginRequiredMixin,SomenteSupervisorMixin, UpdateView):
     model = Servico
     form_class = ServicoForm
     template_name = 'servico/form.html'
     success_url = reverse_lazy('servico_list')
 
-class ServicoDeleteView(LoginRequiredMixin, DeleteView):
+class ServicoDeleteView(LoginRequiredMixin,SomenteSupervisorMixin, DeleteView):
     model = Servico
     template_name = 'servico/confirm_delete.html'
     success_url = reverse_lazy('servico_list')

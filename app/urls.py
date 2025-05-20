@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import (
-    home, 
+    home, CustomLoginView,
     # SERVIÇO
     ServicoListView, ServicoDetailView, ServicoCreateView,
     ServicoUpdateView, ServicoDeleteView,
@@ -12,9 +12,11 @@ from .views import (
     # OUTROS
     excel_registros
 )
-
+from django.contrib.auth.views import LogoutView
 urlpatterns = [
     path('', home, name='home'),
+    path('login/', CustomLoginView.as_view(), name='login'),
+    path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
     # SERVIÇO
     path('servicos/', ServicoListView.as_view(), name='servico_list'),
     path('servicos/<int:pk>/', ServicoDetailView.as_view(), name='servico_detail'),
