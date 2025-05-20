@@ -87,4 +87,4 @@ Para exportar os registros de execução, acesse a página de listagem de regist
 ### Observações
 - O sistema utiliza o banco de dados SQLite por padrão. Para usar outro banco de dados, altere as configurações no arquivo `settings.py`.
 - O sistema foi desenvolvido e testado com Python 3.12 e Django 5.x. Versões anteriores podem não funcionar corretamente.
-- O sistema salva as fotos no diretório `media/execucoes/`. Certifique-se de que esse diretório exista e tenha permissão de escrita.
+- O sistema salva as fotos no diretório `media/fotos_servicos/`. Certifique-se de que esse diretório exista e tenha permissão de escrita.
