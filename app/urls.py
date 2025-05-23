@@ -13,6 +13,8 @@ from .views import (
     excel_registros
 )
 from django.contrib.auth.views import LogoutView
+from django.conf import settings
+from django.conf.urls.static import static
 urlpatterns = [
     path('', home, name='home'),
     path('login/', CustomLoginView.as_view(), name='login'),
@@ -33,4 +35,4 @@ urlpatterns = [
 
     # OUTROS
     path('registros/excel/', excel_registros, name='excel_registros'),
-    ]
+    ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

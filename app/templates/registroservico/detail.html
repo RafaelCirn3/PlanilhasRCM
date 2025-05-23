@@ -46,19 +46,23 @@
                 </dl>
             </div>
             <div class="col-md-6">
-                {% if object.fotos %}
-                <div class="text-center mb-3">
-                    <a href="{{ object.fotos.url }}" data-toggle="lightbox" data-title="Foto do Serviço">
-                        <img src="{{ object.fotos.url }}" class="img-fluid img-thumbnail" style="max-height: 200px;">
-                    </a>
-                    <p class="text-muted mt-2">Clique na imagem para ampliar</p>
-                </div>
-                {% else %}
-                <div class="alert alert-info">
-                    <i class="fas fa-info-circle"></i> Nenhuma foto registrada para este serviço
-                </div>
-                {% endif %}
-            </div>
+    {% if object.fotos %}
+    <div class="text-center mb-3">
+        <a href="{{ object.fotos.url }}" target="_blank">
+            <img src="{{ object.fotos.url }}" 
+                 class="img-fluid img-thumbnail rounded" 
+                 style="max-height: 200px; cursor: pointer"
+                 alt="Foto do serviço {{ object.nome|default:'' }}">
+        </a>
+        <small class="text-muted d-block mt-2">Clique para abrir a imagem em nova aba</small>
+    </div>
+    {% else %}
+    <div class="alert alert-info d-flex align-items-center">
+        <i class="fas fa-info-circle mr-2"></i>
+        Nenhuma foto registrada para este serviço
+    </div>
+    {% endif %}
+</div>
         </div>
 
         <div class="row">
@@ -97,18 +101,3 @@
 <link rel="stylesheet" href="{% static 'adminlte/plugins/ekko-lightbox/ekko-lightbox.css' %}">
 {% endblock %}
 
-{% block extra_js %}
-<!-- Ekko Lightbox -->
-<script src="{% static 'adminlte/plugins/ekko-lightbox/ekko-lightbox.min.js' %}"></script>
-
-<script>
-$(function () {
-    $(document).on('click', '[data-toggle="lightbox"]', function(event) {
-        event.preventDefault();
-        $(this).ekkoLightbox({
-            alwaysShowClose: true
-        });
-    });
-});
-</script>
-{% endblock %}
